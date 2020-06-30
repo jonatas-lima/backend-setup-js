@@ -15,7 +15,7 @@ module.exports = {
   },
 
   async show(req, res) {
-    const product = await connection('products').where(id, req.params.id).first()
+    const product = await connection('products').where('id', req.params.id).first()
 
     if (!product) {
       return res.status(400).send('product not found')
