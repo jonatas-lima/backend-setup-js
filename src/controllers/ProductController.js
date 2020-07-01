@@ -1,5 +1,21 @@
 const connection = require('../database/connection') // importa a conexão com o banco de dados
 
+function getProducts() {
+  const prod = await connection('products').select('*')
+  return prod
+}
+
+function serializeProducts(products) {
+  return products.map(prod => {
+    return {
+      id: prod.id,
+      name: prod.name,
+      description: prod.description,
+      price: prod.price
+    }
+  })
+}
+
 module.exports = {
   /**
    * Listagem dos produtos
@@ -7,17 +23,11 @@ module.exports = {
    * @param {*} res response
    * @returns produtos no formato JSON
    */
-  async index(req, res) {
-    const products = await connection('products').select('*') // conecta com o bd e seleciona tudo
-    const serializedProducts = products.map(product => { // "filtra" os produtos
-      return{
-        id: product.id,
-        name: product.name,
-        description: product.description
-      }
-    })
+  async getAllProducts(req, res) {
+    const products = getProducts()
+    const serializedProd = serializeProducts(products)
 
-    return res.json(serializedProducts)
+    return res.json(serializedProd)
   },
 
   /**
@@ -26,7 +36,7 @@ module.exports = {
    * @param {*} res response
    * @returns Caso exista, um único produto, caso não retorna um status 400 com uma mensagem de erro
    */
-  async show(req, res) {
+  async getProductById(req, res) {
     const product = await connection('products').where('id', req.params.id).first()
 
     if (!product) {
@@ -46,7 +56,7 @@ module.exports = {
    * @param {*} res response
    * @returns Produto cadastrado no formato JSON
    */
-  async create(req, res) {
+  async createProduct(req, res) {
     const {
       name,
       description,
