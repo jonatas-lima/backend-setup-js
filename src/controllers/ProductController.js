@@ -17,12 +17,6 @@ function serializeProducts(products) {
 }
 
 module.exports = {
-  /**
-   * Listagem dos produtos
-   * @param {*} req request 
-   * @param {*} res response
-   * @returns produtos no formato JSON
-   */
   async getAllProducts(req, res) {
     const products = getProducts()
     const serializedProd = serializeProducts(products)
@@ -30,12 +24,6 @@ module.exports = {
     return res.json(serializedProd)
   },
 
-  /**
-   * Consulta de um produto pelo 'id'
-   * @param {*} req request
-   * @param {*} res response
-   * @returns Caso exista, um único produto, caso não retorna um status 400 com uma mensagem de erro
-   */
   async getProductById(req, res) {
     const product = await connection('products').where('id', req.params.id).first()
 
@@ -50,12 +38,6 @@ module.exports = {
     })
   },
 
-  /**
-   * Cadastra um produto no banco de dados
-   * @param {*} req request 
-   * @param {*} res response
-   * @returns Produto cadastrado no formato JSON
-   */
   async createProduct(req, res) {
     const {
       name,
